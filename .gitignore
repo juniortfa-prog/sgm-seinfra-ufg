@@ -1,0 +1,29 @@
+# Credenciais e arquivos privados
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+private/
+dados_privados/
+bases/
+backups/
+exports/
+*.csv
+*.xls
+*.xlsx
+*.sqlite
+*.db
+*.zip
+
+# HTML legado inclui OS reais — proibido no GitHub público
+*V54*.html
+*V53*.html
+*V52*.html
+
+node_modules/
+__pycache__/
+.pytest_cache/
+.venv/
+.DS_Store
