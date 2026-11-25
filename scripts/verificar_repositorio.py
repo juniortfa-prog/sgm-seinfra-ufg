@@ -1,7 +1,7 @@
 """Pré-verificação de arquivos sensíveis no repositório público do SGM.
 
 Execute: python scripts/verificar_repositorio.py
-Uma aprovação humana e testes de autorização continuam obrigatórios.
+Não substitui revisão humana de privacidade, autorização e RLS.
 """
 from pathlib import Path
 import re
@@ -11,10 +11,11 @@ ROOT = Path(__file__).resolve().parents[1]
 SKIP = {'.git', 'node_modules', '.venv', '__pycache__'}
 TEXT = {'.html', '.js', '.json', '.txt', '.md', '.py', '.sql', '.css', '.yml', '.yaml'}
 FORBIDDEN = {'.env', '.env.production', '.env.local'}
+
 PATTERNS = [
-    (re.compile(r'(?is)<script\\b[^>]*\\bid=["\\\']data["\\\'][^>]*>\\s*\\{\\s*["\\\']rows["\\\']\\s*:\\s*\\[\\s*\\{'), 'JSON de OS incorporado'),
-    (re.compile(r'\\bsb_secret_[A-Za-z0-9_-]{10,}\\b'), 'chave secreta Supabase'),
-    (re.compile(r'\\b(?:ghp|gho|ghu|ghs|ghr)_[A-Za-z0-9]{20,}\\b'), 'token GitHub'),
+    (re.compile(r"""(?is)<script\b[^>]*\bid=['"]data['"][^>]*>\s*\{\s*['"]rows['"]\s*:\s*\[\s*\{"""), 'JSON de OS incorporado'),
+    (re.compile(r'\bsb_secret_[A-Za-z0-9_-]{10,}\b'), 'chave secreta Supabase'),
+    (re.compile(r'\b(?:ghp|gho|ghu|ghs|ghr)_[A-Za-z0-9]{20,}\b'), 'token GitHub'),
     (re.compile(r'(?i)-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----'), 'chave PEM privada'),
 ]
 
@@ -31,18 +32,19 @@ def main():
             continue
         checked += 1
         if path.suffix.lower() in {'.html', '.json', '.js'} and path.stat().st_size > 2_000_000:
-            errors.append(f'{relative}: verificar conteúdo de arquivo grande')
+            errors.append(f'{relative}: arquivo grande; revisar se contém base incorporada')
             continue
         content = path.read_text(encoding='utf-8', errors='replace')
-        for pat, title in PATTERNS:
-            if pat.search(content):
+        for pattern, title in PATTERNS:
+            if pattern.search(content):
                 errors.append(f'{relative}: {title}')
     if errors:
         print('PUBLICAÇÃO BLOQUEADA:')
         for error in errors:
             print(' -', error)
         return 1
-    print(f'Pré-verificação concluída em {checked} arquivos; revisão manual ainda necessária.')
+    print(f'Pré-verificação concluída: {checked} arquivos de texto sem padrões proibidos encontrados.')
+    print('Aprovação humana e testes de RLS permanecem obrigatórios.')
     return 0
 
 if __name__ == '__main__':
