@@ -18,9 +18,7 @@ exports/
 *.zip
 
 # HTML legado inclui OS reais — proibido no GitHub público
-*V54*.html
-*V53*.html
-*V52*.html
+*V[0-9]*.html
 
 node_modules/
 __pycache__/
