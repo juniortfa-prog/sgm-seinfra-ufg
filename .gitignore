@@ -34,3 +34,6 @@ __pycache__/
 
 /dist/
 /supabase/.temp/
+
+# Configuração/relatórios privados do importador
+sgm-importacao.local.json

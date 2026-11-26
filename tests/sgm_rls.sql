@@ -51,6 +51,9 @@ declare
     expected_count integer;
     table_name text;
 begin
+    if has_column_privilege('public.sgm_orders', 'source_record', 'SELECT') then
+        raise exception 'Envelope de origem exposto ao cliente';
+    end if;
     foreach table_name in array array['sgm_profiles', 'sgm_campaigns', 'sgm_orders'] loop
         if has_table_privilege('public.' || table_name, 'INSERT, UPDATE, DELETE, TRUNCATE') then
             raise exception 'Cliente possui permissão de escrita em %', table_name;
@@ -71,7 +74,8 @@ begin
         if (select count(*) from public.sgm_profiles) <> expected_count
             or (select max(role) from public.sgm_profiles) is distinct from expected_role
             or (select count(territory_catalog) from public.sgm_campaigns) <> expected_count
-            or (select count(*) from public.sgm_orders) <> expected_count then
+            or (select count(*) from public.sgm_orders) <> expected_count
+            or (select count(os_id) from public.sgm_orders where source_position >= 0) <> expected_count then
             raise exception 'Visibilidade incorreta para conta %', account;
         end if;
     end loop;
