@@ -13,4 +13,4 @@ jobs:
       - name: Verificar arquivos publicados
         run: python scripts/verificar_repositorio.py
       - name: Testar contrato de dados sem registros reais
-        run: node --test tests/test_data_adapter.mjs
+        run: node --test tests/*.mjs

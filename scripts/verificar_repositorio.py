@@ -9,7 +9,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 SKIP = {'.git', 'node_modules', '.venv', '__pycache__'}
-TEXT = {'.html', '.js', '.json', '.jsonl', '.ndjson', '.txt', '.md', '.py', '.sql', '.css', '.yml', '.yaml'}
+TEXT = {'.html', '.js', '.mjs', '.json', '.jsonl', '.ndjson', '.txt', '.md', '.py', '.sql', '.css', '.yml', '.yaml'}
 FORBIDDEN = {'.env', '.env.production', '.env.local'}
 
 PATTERNS = [

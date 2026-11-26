@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SGM SEINFRA/UFG — Validação da integração</title>
+  <style>
+    body { font: 1rem/1.5 system-ui, sans-serif; background: #f3f6f9; color: #142d46; }
+    main { max-width: 34rem; margin: 8vh auto; padding: 1.5rem; background: white; }
+    fieldset { border: 0; padding: 0; }
+    label, input { display: block; margin-block: .35rem; }
+    input, select, button { font: inherit; padding: .4rem; }
+    input { box-sizing: border-box; width: 100%; }
+  </style>
+  <script type="module" src="../src/sgm_integration.mjs"></script>
+</head>
+<body>
+  <main>
+    <h1>SGM SEINFRA/UFG</h1>
+    <p>Validação da integração com o Supabase</p>
+    <p id="status" role="status">Carregando configuração…</p>
+    <form method="post" id="entrar" hidden>
+      <fieldset>
+        <label for="email">E-mail</label>
+        <input id="email" type="email" autocomplete="username" required>
+        <label for="senha">Senha</label>
+        <input id="senha" type="password" autocomplete="current-password" required>
+        <button>Entrar</button>
+      </fieldset>
+    </form>
+    <button id="sair" type="button" hidden>Sair</button>
+    <section id="consulta" hidden aria-label="Conferência da base">
+      <p id="perfil"></p>
+      <label for="periodo">Período</label>
+      <select id="periodo">
+        <option value="3">3 meses</option>
+        <option value="6">6 meses</option>
+        <option value="12">12 meses</option>
+        <option value="24" selected>24 meses</option>
+        <option value="60">60 meses</option>
+        <option value="120">120 meses</option>
+        <option value="all">Todo o histórico</option>
+      </select>
+      <p><output id="total" for="periodo" aria-live="polite"></output></p>
+    </section>
+  </main>
+</body>
+</html>
