@@ -13,7 +13,19 @@ insert into public.sgm_profiles (user_id, role, active) values
     ('00000000-0000-0000-0000-000000000005', 'gestor', false);
 
 insert into public.sgm_campaigns values
-    ('10000000-0000-0000-0000-000000000001', 'teste', 1, '{}', '[]', '[]');
+    ('10000000-0000-0000-0000-000000000001', 'teste', 1, '{}', '[]', '[]',
+     '{"buildings":[],"blocks":[],"localities":[]}');
+
+do $$
+begin
+    begin
+        update public.sgm_campaigns set territory_catalog = '{"buildings":[]}';
+        raise exception 'Catálogo sem todas as coleções foi aceito';
+    exception when check_violation then
+        null;
+    end;
+end
+$$;
 
 insert into public.sgm_orders values
     ('10000000-0000-0000-0000-000000000001', 'FICTICIA', 0, '2025-01-01',
@@ -58,7 +70,7 @@ begin
         expected_role := roles[account];
         if (select count(*) from public.sgm_profiles) <> expected_count
             or (select max(role) from public.sgm_profiles) is distinct from expected_role
-            or (select count(*) from public.sgm_campaigns) <> expected_count
+            or (select count(territory_catalog) from public.sgm_campaigns) <> expected_count
             or (select count(*) from public.sgm_orders) <> expected_count then
             raise exception 'Visibilidade incorreta para conta %', account;
         end if;

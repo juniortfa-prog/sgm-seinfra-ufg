@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>SGM SEINFRA/UFG — Validação da integração</title>
+  <title>SGM SEINFRA/UFG — Acesso institucional</title>
   <style>
     body { font: 1rem/1.5 system-ui, sans-serif; background: #f3f6f9; color: #142d46; }
     main { max-width: 34rem; margin: 8vh auto; padding: 1.5rem; background: white; }
@@ -11,13 +11,20 @@
     label, input { display: block; margin-block: .35rem; }
     input, select, button { font: inherit; padding: .4rem; }
     input { box-sizing: border-box; width: 100%; }
+    .autenticado { margin: 0; }
+    .autenticado main { box-sizing: border-box; max-width: none; margin: 0; padding: .5rem 1rem; display: flex; gap: 1rem; align-items: center; }
+    .autenticado h1, .autenticado #introducao { display: none; }
+    .autenticado #status { margin: 0; }
+    #workspace:not(:empty) { display: flex; flex: 1; min-height: 0; }
+    .autenticado { display: flex; flex-direction: column; height: 100dvh; }
+    iframe { width: 100%; border: 0; }
   </style>
   <script type="module" src="../src/sgm_integration.mjs"></script>
 </head>
 <body>
   <main>
     <h1>SGM SEINFRA/UFG</h1>
-    <p>Validação da integração com o Supabase</p>
+    <p id="introducao">Acesso institucional</p>
     <p id="status" role="status">Carregando configuração…</p>
     <form method="post" id="entrar" hidden>
       <fieldset>
@@ -29,20 +36,7 @@
       </fieldset>
     </form>
     <button id="sair" type="button" hidden>Sair</button>
-    <section id="consulta" hidden aria-label="Conferência da base">
-      <p id="perfil"></p>
-      <label for="periodo">Período</label>
-      <select id="periodo">
-        <option value="3">3 meses</option>
-        <option value="6">6 meses</option>
-        <option value="12">12 meses</option>
-        <option value="24" selected>24 meses</option>
-        <option value="60">60 meses</option>
-        <option value="120">120 meses</option>
-        <option value="all">Todo o histórico</option>
-      </select>
-      <p><output id="total" for="periodo" aria-live="polite"></output></p>
-    </section>
   </main>
+  <div id="workspace"></div>
 </body>
 </html>

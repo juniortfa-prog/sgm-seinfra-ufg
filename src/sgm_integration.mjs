@@ -1,44 +1,27 @@
 import { createClient } from '@supabase/supabase-js';
 import { abrirConsulta, configurarSupabase } from './sgm_auth.mjs';
-import { contarPorPeriodo } from './sgm_data_adapter.mjs';
+import { documentoV55 } from './sgm_v55_boot.mjs';
 
 const $ = (id) => document.getElementById(id);
 const form = $('entrar');
 const logout = $('sair');
-const dashboard = $('consulta');
+const workspace = $('workspace');
 const status = $('status');
-const roleLabels = {
-  gestor: 'Gestor',
-  supervisor: 'Supervisor',
-  encarregado: 'Encarregado',
-  secretaria_os: 'Secretaria de OS',
-};
-let consulta;
 let generation = 0;
 
 function clearConsulta(message) {
   generation++;
-  consulta = undefined;
-  dashboard.hidden = true;
+  workspace.replaceChildren();
   logout.hidden = true;
   form.hidden = false;
-  $('perfil').textContent = '';
-  $('total').textContent = '';
+  document.body.classList.remove('autenticado');
   status.textContent = message;
-}
-
-function showCount() {
-  if (!consulta) return;
-  const { base, openedDates, check } = consulta;
-  const count = contarPorPeriodo(openedDates, base.refdate, $('periodo').value);
-  $('total').textContent = `${count} OS no período · ${check.total} no histórico · ${check.balanco24} no balanço legado de 24 meses`;
 }
 
 function initialize(client) {
   client.auth.onAuthStateChange((event) => {
     if (event === 'SIGNED_OUT') clearConsulta('Sessão encerrada.');
   });
-  $('periodo').addEventListener('change', showCount);
   logout.addEventListener('click', async () => {
     clearConsulta('Encerrando sessão…');
     form.hidden = true;
@@ -62,19 +45,24 @@ function initialize(client) {
     try {
       const opened = await abrirConsulta(client, $('email').value.trim(), password);
       if (attempt !== generation) return;
-      consulta = opened;
-      $('perfil').textContent = `Perfil: ${roleLabels[consulta.role]}`;
-      showCount();
-      status.textContent = 'Campanha validada para consulta.';
+      const { default: templateV55 } = await import('../referencia/SGM_V55_5_interface_sem_dados.html?raw');
+      if (attempt !== generation) return;
+
+      const frame = document.createElement('iframe');
+      frame.title = 'SGM V55.5';
+      frame.setAttribute('sandbox', 'allow-scripts allow-popups allow-modals allow-downloads');
+      frame.srcdoc = documentoV55(templateV55, opened.base, opened.role);
+      workspace.replaceChildren(frame);
+      document.body.classList.add('autenticado');
+      status.textContent = 'Campanha verificada. Alterações desta sessão são temporárias.';
       form.hidden = true;
       logout.hidden = false;
-      dashboard.hidden = false;
     } catch (error) {
       if (attempt !== generation) return;
       try {
         await client.auth.signOut({ scope: 'local' });
       } catch {
-        // A consulta falhou e nenhuma base será mantida na página.
+        // Nenhum módulo recebeu a base após a falha.
       } finally {
         clearConsulta(error.message);
       }

@@ -7,7 +7,7 @@ A migração cria três tabelas com RLS:
 | Tabela | Responsabilidade |
 | --- | --- |
 | `sgm_profiles` | Vincula uma conta de Supabase Auth ao perfil e indica se está habilitada. |
-| `sgm_campaigns` | Guarda código, contagem esperada, metadados da interface e catálogos. |
+| `sgm_campaigns` | Guarda código, contagem esperada, metadados da interface e catálogos. A segunda migração acrescenta o snapshot territorial da campanha. |
 | `sgm_orders` | Preserva OS original, data, posição, classificação preparada, localização conciliada e pertinência ao balanço V54.9. |
 
 Os quatro perfis habilitados têm a mesma permissão de consulta nesta etapa. Cada conta vê somente seu próprio perfil ativo. As tabelas não concedem leitura à role `anon` nem escrita à role `authenticated`. A habilitação de contas será administrada pelo responsável pelo banco.
@@ -15,8 +15,8 @@ Os quatro perfis habilitados têm a mesma permissão de consulta nesta etapa. Ca
 ## Validação local
 
 - `npm ci`, `npm test` e `npm run build` verificam o cliente com fixtures sintéticas.
-- `tests/sgm_rls.sql` testa a migração em PostgreSQL descartável. Use uma tabela mínima `auth.users(id uuid primary key)` e funções `auth.uid()` e `auth.jwt()` que leem `request.jwt.claims`, com roles `anon` e `authenticated` e acesso ao esquema `auth`. Aplique a migração e então execute o teste com `psql -v ON_ERROR_STOP=1` como proprietário. O teste reverte os registros sintéticos.
-- Para conferir a tela sem conexão, execute `npm run dev`. Para validar o login real em ambiente autorizado, copie `.env.example` para `.env.local`, preencha a chave publicável, reinicie o servidor e use uma conta previamente habilitada. A consulta depende da campanha carregada.
+- `tests/sgm_rls.sql` testa a migração em PostgreSQL descartável. Use uma tabela mínima `auth.users(id uuid primary key)` e funções `auth.uid()` e `auth.jwt()` que leem `request.jwt.claims`, com roles `anon` e `authenticated` e acesso ao esquema `auth`. Aplique as migrações na ordem dos arquivos e então execute o teste com `psql -v ON_ERROR_STOP=1` como proprietário. O teste reverte os registros sintéticos.
+- Para conferir o acesso sem conexão, execute `npm run dev`. Para validar o login real em ambiente autorizado, copie `.env.example` para `.env.local`, preencha a chave publicável, reinicie o servidor e use uma conta previamente habilitada. Os módulos da V55.5 abrem após a validação da campanha. Veja o contrato de carga em `docs/ETAPA_02_CONTRATO_DE_DADOS.md`.
 
 ## Próxima migração
 
