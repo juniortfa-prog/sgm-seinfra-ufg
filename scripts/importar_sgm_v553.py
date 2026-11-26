@@ -78,8 +78,12 @@ def classificar(source):
     deferred = booleano(source['preventiva_refrigeracao_adiada'])
     if operational == 'PREVENTIVA_ADIADA' and not deferred:
         raise ValueError('Preventiva adiada com marcador contraditório')
+    emergency = source.get('motivo_emergencia')
+    if emergency is not None and not isinstance(emergency, str):
+        raise ValueError('Motivo de emergência em formato não textual')
     result = {
         **source,
+        'emergencyLabel': emergency if emergency is not None else '',
         'g': gut_numero(gut.get('g')),
         'u': gut_numero(gut.get('u')),
         't': gut_numero(gut.get('t')),
@@ -190,6 +194,8 @@ def localizar(source, link, localities, blocks, buildings, resolve):
 
 def metadados(value):
     metadata = objeto(value['original_metadata'])
+    if {'rows', 'sites', 'staff'} & metadata.keys():
+        raise ValueError('Metadados devem estar separados das OS e dos catálogos')
     if metadata.get('refdate') != REFERENCE.isoformat():
         raise ValueError('Data de referência dos metadados divergente')
     if not all(isinstance(value.get(key), list) for key in ('sites_catalog', 'staff_catalog')):
@@ -251,6 +257,12 @@ def preparar(path, config):
     }
     campaign = (len(orders), *metadados(legacy), territory, manifest_hash) if legacy is not None else None
     report = {'hashes_sha256_validados': 7, **counts, 'metadados_v55_presentes': campaign is not None}
+    if campaign is not None:
+        report.update(
+            referencia_v55=campaign[1]['refdate'],
+            locais_catalogo_legado=len(campaign[2]),
+            pessoal_catalogo_legado=len(campaign[3]),
+        )
     return campaign, orders, report
 
 

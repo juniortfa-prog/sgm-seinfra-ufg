@@ -46,6 +46,7 @@ def fixture(path, fail=None):
                 'prioridade_origem': 'Alta',
                 'hierarquia_operacional': 'PREVENTIVA_ADIADA' if deferred else 'H2',
                 'hierarquia_sem_preventiva': 2,
+                'motivo_emergencia': 'Motivo H2 fictício' if index == 410 else None,
                 'preventiva_refrigeracao_adiada': deferred,
             },
             'localizacao_conciliada': {
@@ -107,6 +108,8 @@ class ImportadorTest(unittest.TestCase):
         self.assertEqual(json.loads(result.stdout), {
             'modo': 'simulacao', 'hashes_sha256_validados': 7,
             **importer.EXPECTED, 'metadados_v55_presentes': True,
+            'referencia_v55': '2026-11-09',
+            'locais_catalogo_legado': 0, 'pessoal_catalogo_legado': 0,
         })
         self.assertNotIn('FICTICIA', result.stdout)
 
@@ -128,6 +131,24 @@ class ImportadorTest(unittest.TestCase):
         self.assertFalse(orders[-1][6])
         self.assertEqual(report['revisoes_territoriais'], 11)
         self.assertIsNone(campaign[4]['buildings'][-1]['block_id'])
+
+    def test_h2_projeta_motivo_sem_alterar_classificacao_original(self):
+        config, source = fixture(self.path)
+        _, orders, _ = importer.preparar(self.path, config)
+        original = source[410]['classificacao_preparada']
+        projected = orders[410][4]
+        self.assertEqual(projected['hierarchy'], 'H2')
+        self.assertFalse(projected['deferredPreventive'])
+        self.assertEqual(projected['emergencyLabel'], 'Motivo H2 fictício')
+        self.assertEqual(projected['motivo_emergencia'], original['motivo_emergencia'])
+        self.assertEqual(orders[410][7]['classificacao_preparada'], original)
+        self.assertNotIn('emergencyLabel', original)
+        self.assertEqual(orders[411][4]['emergencyLabel'], '')
+        self.assertEqual(importer.classificar({
+            key: value for key, value in original.items() if key != 'motivo_emergencia'
+        })['emergencyLabel'], '')
+        with self.assertRaisesRegex(ValueError, 'Motivo de emergência'):
+            importer.classificar({**original, 'motivo_emergencia': 2})
 
     def test_recusa_manifesto_hash_conciliacao_e_contagem_divergentes(self):
         for case, message in [('manifesto', 'sete arquivos'), ('hash', 'SHA256'),

@@ -59,6 +59,7 @@ test('usa classificação preparada e preserva os três objetos de origem', asyn
     [first.g, first.u, first.t, first.gut, first.priority, first.hierarchy, first.deferredPreventive],
     [2, 3, 4, 24, 'Alta', 'H2', false],
   );
+  assert.equal(first.emergencyLabel, 'Motivo fictício');
   assert.equal(first.team, 'Equipe fictícia');
   assert.equal(first.building, 'Edifício fictício 0');
   assert.equal(first.blockId, 'bloco-1');
