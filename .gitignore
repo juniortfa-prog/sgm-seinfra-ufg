@@ -10,6 +10,12 @@ dados_privados/
 bases/
 backups/
 exports/
+data/
+dados/
+*.jsonl
+*.ndjson
+*BASE*.json
+*OS*.json
 *.csv
 *.xls
 *.xlsx
