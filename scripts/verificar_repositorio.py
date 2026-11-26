@@ -9,7 +9,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 SKIP = {'.git', 'node_modules', '.venv', '__pycache__'}
-TEXT = {'.html', '.js', '.json', '.txt', '.md', '.py', '.sql', '.css', '.yml', '.yaml'}
+TEXT = {'.html', '.js', '.json', '.jsonl', '.ndjson', '.txt', '.md', '.py', '.sql', '.css', '.yml', '.yaml'}
 FORBIDDEN = {'.env', '.env.production', '.env.local'}
 
 PATTERNS = [
@@ -31,7 +31,7 @@ def main():
         if path.suffix.lower() not in TEXT:
             continue
         checked += 1
-        if path.suffix.lower() in {'.html', '.json', '.js'} and path.stat().st_size > 2_000_000:
+        if path.suffix.lower() in {'.html', '.json', '.jsonl', '.ndjson', '.js'} and path.stat().st_size > 2_000_000:
             errors.append(f'{relative}: arquivo grande; revisar se contém base incorporada')
             continue
         content = path.read_text(encoding='utf-8', errors='replace')
