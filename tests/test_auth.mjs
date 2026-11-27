@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { abrirConsulta, configurarSupabase } from '../src/sgm_auth.mjs';
 import { contarPorPeriodo } from '../src/sgm_data_adapter.mjs';
 
-const url = 'https://whjvmlcdontmmgdzdheu.supabase.co';
+const url = 'https://whjvmlcdomtmmgdzdheu.supabase.co';
 const publishable = 'sb_publishable_exemplo';
 
 test('aceita apenas o projeto esperado e chave publicável, sem persistir a sessão', () => {
