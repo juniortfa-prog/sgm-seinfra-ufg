@@ -1,6 +1,6 @@
 # Supabase — primeira etapa
 
-O destino previsto é o projeto **sgm-seinfra-ufg** (`whjymlcdontmmgdzdheu`). Confirme o **nome e o ref** na conexão autorizada antes de aplicar a migração. A migração foi executada em PostgreSQL local descartável com funções de autenticação simuladas.
+O destino previsto é o projeto **sgm-seinfra-ufg** (`whjvmlcdontmmgdzdheu`). Confirme o **nome e o ref** na conexão autorizada antes de aplicar a migração. A migração foi executada em PostgreSQL local descartável com funções de autenticação simuladas.
 
 A migração cria três tabelas com RLS:
 
@@ -48,18 +48,18 @@ O importador grava a origem, a classificação e o território nas colunas exist
 ### Verificação e execução remota
 
 1. Conservar o ZIP e a configuração fora do checkout. Executar a simulação na estação privada e guardar apenas o resultado agregado. Conferir as contagens do manifesto, a data de referência e os totais dos catálogos.
-2. Confirmar que a instância esperada é `sgm-seinfra-ufg` / `whjymlcdontmmgdzdheu`. Injetar `SGM_SUPABASE_ACCESS_TOKEN` no ambiente e rodar `python scripts/importar_sgm_v553.py --verificar-destino`. Se a confirmação falhar, interromper.
+2. Confirmar que a instância esperada é `sgm-seinfra-ufg` / `whjvmlcdontmmgdzdheu`. Injetar `SGM_SUPABASE_ACCESS_TOKEN` no ambiente e rodar `python scripts/importar_sgm_v553.py --verificar-destino`. Se a confirmação falhar, interromper.
 3. Antes da primeira alteração remota, revisar o SQL e reproduzir os testes locais com `tests/sgm_auth_fixture.sql`, as migrações em ordem e `tests/sgm_rls.sql` em PostgreSQL descartável. No projeto confirmado, verificar que é possível provisionar contas reais e perfis ativos e que os testes de acesso podem ser realizados antes da carga institucional.
 4. Em checkout de desenvolvimento, executar `supabase init` se `supabase/config.toml` estiver ausente. Vincular explicitamente ao ref confirmado e revisar o histórico e a lista de migrações pendentes:
 
    ```bash
-   supabase link --project-ref whjymlcdontmmgdzdheu
+   supabase link --project-ref whjvmlcdontmmgdzdheu
    supabase migration list --linked
    supabase db push --linked --dry-run
    ```
 
    Após revisar o plano e obter autorização de execução, aplicar com `supabase db push --linked`. Não usar opções de carga de seed. Reexaminar o histórico após a aplicação.
 5. Antes da carga real, validar Auth e RLS na instância confirmada com sessões reais e dados sintéticos controlados. Verificar leitura de perfis ativos, bloqueio de anônimos, contas sem perfil ou inativas, ausência de escrita pelo cliente e proteção da coluna `source_record`. O fixture SQL das roles e funções simuladas destina-se exclusivamente ao PostgreSQL local.
-6. Instalar o driver com `python -m pip install -r scripts/requirements-importacao.txt` e injetar `SGM_SUPABASE_DB_PASSWORD` no ambiente. Quando a carga for autorizada, acrescentar `--aplicar --confirmar-ref whjymlcdontmmgdzdheu` ao comando de simulação. O importador repete a verificação do projeto e usa TLS com verificação do hostname. Após a carga, conferir os quantitativos e a leitura autenticada. Divergências não autorizam sobrescrita ou exclusão.
+6. Instalar o driver com `python -m pip install -r scripts/requirements-importacao.txt` e injetar `SGM_SUPABASE_DB_PASSWORD` no ambiente. Quando a carga for autorizada, acrescentar `--aplicar --confirmar-ref whjvmlcdontmmgdzdheu` ao comando de simulação. O importador repete a verificação do projeto e usa TLS com verificação do hostname. Após a carga, conferir os quantitativos e a leitura autenticada. Divergências não autorizam sobrescrita ou exclusão.
 
 Para repetir o teste de idempotência, execute as migrações em um PostgreSQL descartável com as funções de Auth simuladas, instale o driver e rode a suíte Python com `SGM_TEST_POSTGRES_PORT` apontando para a porta local dessa instância vazia.
