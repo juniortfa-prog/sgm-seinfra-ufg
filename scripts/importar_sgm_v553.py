@@ -14,7 +14,7 @@ from zipfile import BadZipFile
 from validar_pacote_v553 import ler_pacote
 
 PROJECT_NAME = 'sgm-seinfra-ufg'
-PROJECT_REF = 'whjvmlcdontmmgdzdheu'
+PROJECT_REF = 'whjvmlcdomtmmgdzdheu'
 CAMPAIGN = 'v549-base-integral-2026-11-09'
 REFERENCE = date(2026, 11, 9)
 CUTOFF = date(2024, 11, 9)
