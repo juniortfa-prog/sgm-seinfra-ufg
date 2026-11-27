@@ -1,6 +1,6 @@
 import { carregarBaseSgm } from './sgm_data_adapter.mjs';
 
-const PROJECT_URL = 'https://whjymlcdontmmgdzdheu.supabase.co';
+const PROJECT_URL = 'https://whjvmlcdontmmgdzdheu.supabase.co';
 
 export function configurarSupabase(createClient, url, key) {
   if (![PROJECT_URL, PROJECT_URL + '/'].includes(url) ||
