@@ -31,3 +31,10 @@ __pycache__/
 .pytest_cache/
 .venv/
 .DS_Store
+
+/dist/
+/supabase/.temp/
+
+# Configuração/relatórios privados do importador
+sgm-importacao.local.json
+SGM_Configuracao_Privada_Importacao_V55_5.json

@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SGM SEINFRA/UFG — Acesso institucional</title>
+  <style>
+    body { font: 1rem/1.5 system-ui, sans-serif; background: #f3f6f9; color: #142d46; }
+    main { max-width: 34rem; margin: 8vh auto; padding: 1.5rem; background: white; }
+    fieldset { border: 0; padding: 0; }
+    label, input { display: block; margin-block: .35rem; }
+    input, select, button { font: inherit; padding: .4rem; }
+    input { box-sizing: border-box; width: 100%; }
+    .autenticado { margin: 0; }
+    .autenticado main { box-sizing: border-box; max-width: none; margin: 0; padding: .5rem 1rem; display: flex; gap: 1rem; align-items: center; }
+    .autenticado h1, .autenticado #introducao { display: none; }
+    .autenticado #status { margin: 0; }
+    #workspace:not(:empty) { display: flex; flex: 1; min-height: 0; }
+    .autenticado { display: flex; flex-direction: column; height: 100dvh; }
+    iframe { width: 100%; border: 0; }
+  </style>
+  <script type="module" src="../src/sgm_integration.mjs"></script>
+</head>
+<body>
+  <main>
+    <h1>SGM SEINFRA/UFG</h1>
+    <p id="introducao">Acesso institucional</p>
+    <p id="status" role="status">Carregando configuração…</p>
+    <form method="post" id="entrar" hidden>
+      <fieldset>
+        <label for="email">E-mail</label>
+        <input id="email" type="email" autocomplete="username" required>
+        <label for="senha">Senha</label>
+        <input id="senha" type="password" autocomplete="current-password" required>
+        <button>Entrar</button>
+      </fieldset>
+    </form>
+    <button id="sair" type="button" hidden>Sair</button>
+  </main>
+  <div id="workspace"></div>
+</body>
+</html>
