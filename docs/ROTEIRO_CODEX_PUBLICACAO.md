@@ -64,4 +64,4 @@ O HTML V55.5 foi inspecionado: `D=JSON.parse(document.getElementById('data').tex
 - Não há integração multiusuário funcionando ou teste end-to-end com Supabase.
 
 ## Identificação preventiva do destino
-A captura fornecida pelo gestor mostra a URL pública do NOVO projeto Supabase `https://whjymlcdontmmgdzdheu.supabase.co` (ref `whjymlcdontmmgdzdheu`). **O conector Supabase desta conversa não tem permissão para verificar o projeto.** Antes da importação, confirmar no painel do Supabase que o nome é `sgm-seinfra-ufg` e o ref é esse; validar também o destino da conexão SQL. Nunca usar o projeto antigo `rezdzemeiuirujhbryxp` (`meu-ponto`).
+A captura fornecida pelo gestor mostra a URL pública do NOVO projeto Supabase `https://whjvmlcdontmmgdzdheu.supabase.co` (ref `whjvmlcdontmmgdzdheu`). **O conector Supabase desta conversa não tem permissão para verificar o projeto.** Antes da importação, confirmar no painel do Supabase que o nome é `sgm-seinfra-ufg` e o ref é esse; validar também o destino da conexão SQL. Nunca usar o projeto antigo `rezdzemeiuirujhbryxp` (`meu-ponto`).
